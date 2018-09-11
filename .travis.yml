@@ -1,33 +1,13 @@
-# Travis-CI Build for IcemanFork/ChameleonMini-rebooted
+sudo: required
+
 language: c
 
-#default linux build env is: Ubuntu 14.04 trusty
-compiler: gcc
-
-# Test on Linux
-matrix:
-  include:
-    - os: linux
-      dist: trusty
-      sudo: required
+services:
+  - docker
 
 before_install:
-## Install ARM toolchain on Linux.
-  if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then 
-    sudo apt-get update -qq;
-    sudo apt-get install gcc-avr avr-libc binutils-avr;
-  fi
+  - docker pull jlirochon/avr-toolkit
 
-install:
-  if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then 
-    cd Firmware/Chameleon-Mini/;
-    make;
-  fi
-
-before_script:
-
-script: 
-## start and run a test script
-##  if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then 
-##    ./client/proxmark3 -h ;
-##  fi
+script:
+  - docker run -v `pwd`/Firmware/Chameleon-Mini:/build jlirochon/avr-toolkit make
+  - cd Firmware/Chameleon-Mini && tar -cjf firmware.tar.bz2 Chameleon-Mini.hex Chameleon-Mini.eep
