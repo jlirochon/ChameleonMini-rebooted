@@ -22,9 +22,12 @@ jobs:
 
   publish:
     docker:
-      - image: debian:stretch
+      - image: ubuntu:bionic
     working_directory: ~/build
     steps:
+      - run:
+          name: Add root certificates
+          command: apt-get update -q && apt-get install -y ca-certificates
       - attach_workspace:
           at: ~/build
       - run:
