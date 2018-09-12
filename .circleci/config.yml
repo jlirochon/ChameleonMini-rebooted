@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build_and_publish:
+  build:
     docker:
       - image: jlirochon/avr-toolkit:0.0.1
     working_directory: ~/build
