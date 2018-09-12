@@ -3,6 +3,7 @@ jobs:
   build:
     docker:
       - image: jlirochon/avr-toolkit:0.0.1
+    working_directory: ~/build
     steps:
       - checkout
       - run:
@@ -10,17 +11,24 @@ jobs:
           command: pwd && ls -la
       - run:
           name: Build Firmware
-          command: cd Firmware/Chameleon-Mini && make
-  publish:
-    docker:
-      - image: ubuntu:bionic
-    steps:
+          command: cd ~/build/Firmware/Chameleon-Mini && make
       - run:
           name: DEBUG where am I
           command: pwd && ls -la
       - run:
           name: Compressing Firmware
-          command: cd Firmware/Chameleon-Mini && tar -cjf firmware.tar.bz2 Chameleon-Mini.hex Chameleon-Mini.eep
+          command: cd ~/build/Firmware/Chameleon-Mini && tar -cjf firmware.tar.bz2 Chameleon-Mini.hex Chameleon-Mini.eep
+      - store_artifacts:
+          path: ~/build
+
+  publish:
+    docker:
+      - image: ubuntu:bionic
+    working_directory: ~/build
+    steps:
+      - run:
+          name: DEBUG where am I
+          command: pwd && ls -la
 
 workflows:
   version: 2
