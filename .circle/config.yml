@@ -2,9 +2,30 @@ version: 2
 jobs:
   build:
     docker:
-    - image: jlirochon/avr-toolkit:0.0.1
+      - image: jlirochon/avr-toolkit:0.0.1
+    working_directory: ~/Firmware/Chameleon-Mini
     steps:
-    - checkout
-    - run:
-        name: Build Firmware
-        command: cd Firmware/Chameleon-Mini && make
+      - checkout
+      - run:
+          name: Build Firmware
+          command: make
+  publish:
+    docker:
+      - image: ubuntu:bionic
+    working_directory: ~/Firmware/Chameleon-Mini
+    steps:
+      - run:
+          name: Compressing Firmware
+          command: tar -cjf firmware.tar.bz2 Chameleon-Mini.hex Chameleon-Mini.eep
+
+workflows:
+  version: 2
+  build_and_publish_wip:
+    jobs:
+      - build
+      - publish:
+          requires:
+            - build
+          filters:
+            branches:
+              only: circle
