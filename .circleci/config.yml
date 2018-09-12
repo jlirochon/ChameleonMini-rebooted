@@ -22,7 +22,7 @@ jobs:
 
   publish:
     docker:
-      - image: ubuntu:bionic
+      - image: debian:stretch
     working_directory: ~/build
     steps:
       - attach_workspace:
