@@ -1,0 +1,10 @@
+version: 2
+jobs:
+  build:
+    docker:
+    - image: jlirochon/avr-toolkit:0.0.1
+    steps:
+    - checkout
+    - run:
+        name: Build Firmware
+        command: cd Firmware/Chameleon-Mini && make
